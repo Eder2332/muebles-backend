@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito de compras</title>
+  <link rel="stylesheet" href="/style/catalog.css">
+  <link rel="stylesheet" href="/style/carrito.css">
+</head>
+<body>
+  <main class="cart-layout">
+    <section class="catalog-hero">
+      <h1 class="cart-title">Carrito de compras</h1>
+      <p>Revisa tus productos, completa tu tarjeta (ficticia) y compra.</p>
+    </section>
+
+    <section class="cart-grid">
+      <section class="page-section">
+        <h2>Productos</h2>
+        <div id="cart-items" class="cart-items">Tu carrito está vacío.</div>
+
+        <div class="cart-summary">
+          <div class="cart-total">
+            <strong>Total</strong>
+            <span id="cart-total">0</span>
+          </div>
+
+          <button id="clear-cart" class="cart-clear" type="button">Vaciar carrito</button>
+        </div>
+      </section>
+
+      <section class="page-section">
+        <h2>Pago (Tarjeta)</h2>
+
+        <form id="payment-form" class="payment-form">
+          <div>
+            <label for="cardName">Nombre en la tarjeta</label>
+            <input id="cardName" name="cardName" type="text" autocomplete="cc-name" required>
+          </div>
+
+          <div>
+            <label for="cardNumber">Número de tarjeta</label>
+            <input id="cardNumber" name="cardNumber" type="text" autocomplete="cc-number" required>
+          </div>
+
+          <div>
+            <label for="cardExpiry">Vencimiento</label>
+            <input id="cardExpiry" name="cardExpiry" type="text" placeholder="MM/AA" autocomplete="cc-exp" required>
+          </div>
+
+          <div>
+            <label for="cardCvv">CVV</label>
+            <input id="cardCvv" name="cardCvv" type="password" autocomplete="cc-csc" required>
+          </div>
+
+          <button id="checkout-btn" class="checkout-btn" type="submit" hidden>Comprar</button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script src="/carrito.js"></script>
+  <script src="/navbar.js"></script>
+</body>
+</html>

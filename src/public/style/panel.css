@@ -1,0 +1,120 @@
+.panel-page {
+  margin: 0;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: Arial, sans-serif;
+}
+
+.panel-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.panel-hero {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #eef4ff 100%);
+  border: 1px solid #dbe4f0;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.panel-title {
+  margin: 0 0 10px;
+  font-size: 32px;
+}
+
+.panel-subtitle {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.panel-section {
+  margin-top: 24px;
+  padding: 22px;
+  background-color: #ffffff;
+  border: 1px solid #dbe4f0;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.panel-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.panel-section-header h2,
+.panel-categories-box h3 {
+  margin: 0;
+}
+
+.panel-section-header-actions {
+  flex-wrap: wrap;
+}
+
+.panel-action-button,
+.panel-table button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.panel-action-button:hover,
+.panel-table button:hover {
+  background: #1d4ed8;
+}
+
+.panel-categories-box {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #dbe4f0;
+  border-radius: 14px;
+}
+
+.panel-categories-box ul {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.panel-categories-box li {
+  margin-bottom: 8px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.panel-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.panel-table th,
+.panel-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.panel-table th {
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 14px;
+}
+
+.panel-table td {
+  color: #334155;
+}

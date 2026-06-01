@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Categoria</title>
+  <link rel="stylesheet" href="/style/catalog.css">
+  <link rel="stylesheet" href="/style/index.css">
+</head>
+<body>
+  <main class="catalog-page">
+    <section class="catalog-hero">
+      <h1 id="category-name">Categoria</h1>
+      <p id="category-description">Aqui veras los productos de la categoria seleccionada.</p>
+    </section>
+
+    <button id="toggle-categories" type="button" class="catalog-toggle-button">Ver categorias</button>
+
+    <section id="categories-section" class="catalog-categories" hidden>
+      <h2>Categorias</h2>
+      <div id="categories-list">Todavia no se cargaron las categorias.</div>
+    </section>
+
+    <section class="catalog-products-section">
+      <h2>Productos</h2>
+      <div id="category-products">Cargando productos...</div>
+    </section>
+  </main>
+  <script src="/categoria.js"></script>
+  <script src="/navbar.js"></script>
+</body>
+</html>

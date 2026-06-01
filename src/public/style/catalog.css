@@ -1,0 +1,212 @@
+/* Estilos base del catálogo (similar a navbar/auth) */
+:root {
+  --bg: #f9f6f2;
+  --surface: #ffffff;
+  --surface-2: #fcfaf8;
+  --border: #e8ddd2;
+  --text: #2d3138;
+  --muted: #7b6d63;
+  --brand: #8b6b4d;
+  --brand-dark: #75583f;
+  --title: #4e342e;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.catalog-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 0;
+}
+
+.catalog-hero {
+  padding: 26px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.catalog-hero h1,
+.catalog-hero h2 {
+  color: var(--title);
+  margin-bottom: 10px;
+}
+
+.catalog-hero p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.catalog-toggle-button {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: 1px solid rgba(139, 107, 77, 0.25);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--brand);
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.catalog-toggle-button:hover {
+  background: rgba(139, 107, 77, 0.08);
+  transform: translateY(-1px);
+}
+
+.catalog-categories {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.catalog-categories ul {
+  margin-top: 12px;
+  padding-left: 18px;
+}
+
+.catalog-categories a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.catalog-categories a:hover {
+  text-decoration: underline;
+}
+
+.catalog-products-section {
+  margin-top: 18px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.catalog-products-section h2 {
+  margin-bottom: 14px;
+  color: var(--title);
+}
+
+/* Cards */
+.product-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1000px) {
+  .product-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .product-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.product-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-header {
+  padding: 16px 16px 10px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.product-card-header h2,
+.product-card-header h3 {
+  margin: 0;
+  color: var(--title);
+  font-size: 18px;
+}
+
+.product-card-image {
+  width: 100%;
+  background: #f4eee8;
+  aspect-ratio: 1 / 1;
+}
+
+.product-card-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.product-card-body {
+  padding: 14px 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.product-card-body p {
+  margin: 0;
+  color: #4a4a4a;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.product-card-actions {
+  padding: 14px 16px 16px;
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.product-card-actions button {
+  flex: 1;
+  padding: 12px 12px;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.product-card-actions button:hover {
+  background: var(--brand-dark);
+  transform: translateY(-1px);
+}
+
+.product-card-actions button:active {
+  transform: translateY(0);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(232, 221, 210, 0.9);
+  margin: 18px 0;
+}
+
+/* Utilidad simple */
+.page-section {
+  margin-top: 18px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}

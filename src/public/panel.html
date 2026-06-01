@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administracion</title>
+    <link rel="stylesheet" href="/style/panel.css">
+</head>
+<body class="panel-page">
+    <main class="panel-layout">
+        <section class="panel-hero">
+            <h1 class="panel-title">Panel de Administracion</h1>
+            <p class="panel-subtitle">Desde aqui el superadministrador puede gestionar usuarios, categorias y productos.</p>
+        </section>
+
+        <section class="panel-section">
+            <div class="panel-section-header">
+                <h2>Usuarios</h2>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="panel-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuarios"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel-section">
+            <div class="panel-section-header panel-section-header-actions">
+                <h2>Productos</h2>
+                <button id="crear-producto-btn" type="button" class="panel-action-button">Agregar producto</button>
+            </div>
+
+            <div class="panel-categories-box">
+                <h3>Categorias disponibles</h3>
+                <div id="categorias-admin">Cargando categorias...</div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="panel-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Categoria</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Imagen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="/panel.js"></script>
+    <script src="/navbar.js"></script>
+</body>
+</html>
