@@ -62,6 +62,17 @@
   line-height: 1.7;
 }
 
+.footer-section a {
+  color: #d3d7dc;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-section a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
 .footer-bottom {
   text-align: center;
 

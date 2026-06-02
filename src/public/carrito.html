@@ -5,6 +5,7 @@
   <title>Carrito de compras</title>
   <link rel="stylesheet" href="/style/catalog.css">
   <link rel="stylesheet" href="/style/carrito.css">
+    <link rel="stylesheet" href="/style/index.css">
 </head>
 <body>
   <main class="cart-layout">
@@ -33,30 +34,59 @@
 
         <form id="payment-form" class="payment-form">
           <div>
-            <label for="cardName">Nombre en la tarjeta</label>
-            <input id="cardName" name="cardName" type="text" autocomplete="cc-name" required>
-          </div>
-
-          <div>
             <label for="cardNumber">Número de tarjeta</label>
-            <input id="cardNumber" name="cardNumber" type="text" autocomplete="cc-number" required>
+            <input
+              id="cardNumber"
+              name="cardNumber"
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-number"
+              placeholder="1234-5678-9012-3456"
+              required
+            >
           </div>
 
-          <div>
-            <label for="cardExpiry">Vencimiento</label>
-            <input id="cardExpiry" name="cardExpiry" type="text" placeholder="MM/AA" autocomplete="cc-exp" required>
-          </div>
-
-          <div>
-            <label for="cardCvv">CVV</label>
-            <input id="cardCvv" name="cardCvv" type="password" autocomplete="cc-csc" required>
-          </div>
-
-          <button id="checkout-btn" class="checkout-btn" type="submit" hidden>Comprar</button>
+          <button id="checkout-btn" class="checkout-btn" type="submit" disabled>Comprar</button>
         </form>
       </section>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre nosotros</h3>
+        <p>Somos una tienda de muebles para hogar, oficina y espacios gamer, enfocada en calidad, diseño y comodidad.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Necesitas Ayuda</h3>
+        <p><a href="/soporte.html">Soporte</a></p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <p>+51 987 654 321</p>
+        <p>soporte@rusnayonubes.com</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Ubicación</h3>
+        <p>Av. Los Artesanos 245</p>
+        <p>Lima, Perú</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Atención</h3>
+        <p>Lunes a Sábado</p>
+        <p>9:00 a.m. - 7:00 p.m.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 UrbanMuebles. Todos los derechos reservados.
+    </div>
+  </footer>
 
   <script src="/carrito.js"></script>
   <script src="/navbar.js"></script>

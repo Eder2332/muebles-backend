@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Soporte</title>
+  <link rel="stylesheet" href="/style/catalog.css">
+  <link rel="stylesheet" href="/style/index.css">
+</head>
+<body>
+  <main class="catalog-page">
+    <section class="catalog-hero">
+      <h1>Soporte</h1>
+      <p>Cuéntanos tu problema y te ayudaremos lo antes posible.</p>
+    </section>
+
+    <section class="page-section">
+      <h2>Cuéntanos tu problema</h2>
+
+      <div style="margin-top: 14px;">
+        <label for="issueSelect" style="font-weight: 700; color: var(--title);">Selecciona un problema</label>
+        <select id="issueSelect" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8;">
+          <option value="No responde la pagina">No responde la pagina</option>
+          <option value="Mi compra no procede">Mi compra no procede</option>
+          <option value="Cambiar correo electronico">Cambiar correo electronico</option>
+          <option value="Cambiar contraseña">Cambiar constraseña</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div id="otherBox" style="margin-top: 14px; display: none;">
+        <label for="otherText" style="font-weight: 700; color: var(--title);">Describe tu problema</label>
+        <textarea id="otherText" rows="5" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8; resize: vertical;"></textarea>
+      </div>
+
+      <button id="sendBtn" type="button" class="checkout-btn" style="margin-top: 16px;">Enviar</button>
+      <p style="margin-top: 10px; color: var(--muted); line-height: 1.7;">
+        Nota: Por el momento este botón no envía mensajes. Más adelante se integrará con correos.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Sobre nosotros</h3>
+        <p>Somos una tienda de muebles para hogar, oficina y espacios gamer, enfocada en calidad, diseño y comodidad.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Necesitas Ayuda</h3>
+        <p><a href="/soporte.html">Soporte</a></p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <p>+51 987 654 321</p>
+        <p>soporte@rusnayonubes.com</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Ubicación</h3>
+        <p>Av. Los Artesanos 245</p>
+        <p>Lima, Perú</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Atención</h3>
+        <p>Lunes a Sábado</p>
+        <p>9:00 a.m. - 7:00 p.m.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 UrbanMuebles. Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <script src="/soporte.js"></script>
+  <script src="/navbar.js"></script>
+</body>
+</html>

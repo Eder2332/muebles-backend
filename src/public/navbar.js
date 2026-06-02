@@ -20,9 +20,10 @@ async function loadNavbar() {
   document.body.insertAdjacentHTML("afterbegin", html);
 
   const nombre = localStorage.getItem("nombre");
+  const token = localStorage.getItem("token");
   const userName = document.getElementById("userName");
 
-  if (nombre) {
+  if (token && nombre) {
     userName.textContent = "👤 " + nombre;
   } else {
     userName.textContent = "No logeado";

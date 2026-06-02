@@ -12,19 +12,7 @@ const Order = sequelize.define('Order', {
     allowNull: false,
     defaultValue: 'tarjeta'
   },
-  cardName: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
   cardNumber: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  cardExpiry: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  cardCvv: {
     type: DataTypes.STRING,
     allowNull: false
   }

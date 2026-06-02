@@ -3,6 +3,13 @@ const Product = require('../models/Product');
 const Order = require('../models/Order');
 const OrderItem = require('../models/OrderItem');
 
+function maskCardNumber(cardDigits) {
+  const digits = String(cardDigits || '').replace(/\D/g, '');
+  if (digits.length < 4) return '****';
+  const last4 = digits.slice(-4);
+  return `****-****-****-${last4}`;
+}
+
 exports.checkout = async (req, res) => {
   const { items, payment } = req.body || {};
 
@@ -24,14 +31,12 @@ exports.checkout = async (req, res) => {
     });
   }
 
-  const cardName = (payment.cardName || '').trim();
-  const cardNumber = (payment.cardNumber || '').trim();
-  const cardExpiry = (payment.cardExpiry || '').trim();
-  const cardCvv = (payment.cardCvv || '').trim();
+  const cardNumberRaw = (payment.cardNumber || '').trim();
+  const cardDigits = cardNumberRaw.replace(/\D/g, '');
 
-  if (!cardName || !cardNumber || !cardExpiry || !cardCvv) {
+  if (cardDigits.length !== 16) {
     return res.status(400).json({
-      error: 'Datos de tarjeta incompletos'
+      error: 'El número de tarjeta debe tener 16 dígitos'
     });
   }
 
@@ -50,41 +55,52 @@ exports.checkout = async (req, res) => {
 
   try {
     const productIds = [...new Set(normalizedItems.map((i) => i.productId))];
-    const products = await Product.findAll({
-      where: { id: productIds }
-    });
-
-    const productsById = new Map(products.map((p) => [p.id, p]));
-
-    const missing = productIds.filter((id) => !productsById.has(id));
-    if (missing.length) {
-      return res.status(400).json({
-        error: 'Hay productos que no existen'
-      });
-    }
-
-    const total = normalizedItems.reduce((acc, item) => {
-      const product = productsById.get(item.productId);
-      const price = Number(product.precio) || 0;
-      return acc + price * item.quantity;
-    }, 0);
-
     const order = await sequelize.transaction(async (t) => {
+      // Cargar y bloquear productos para actualizar stock en forma segura
+      const products = await Product.findAll({
+        where: { id: productIds },
+        transaction: t,
+        lock: t.LOCK.UPDATE
+      });
+
+      const productsById = new Map(products.map((p) => [p.id, p]));
+
+      const missing = productIds.filter((id) => !productsById.has(id));
+      if (missing.length) {
+        const error = new Error('Hay productos que no existen');
+        error.statusCode = 400;
+        throw error;
+      }
+
+      // Validar stock y calcular total
+      const total = normalizedItems.reduce((acc, item) => {
+        const product = productsById.get(item.productId);
+        const price = Number(product.precio) || 0;
+        return acc + price * item.quantity;
+      }, 0);
+
       const createdOrder = await Order.create(
         {
           UserId: req.user.id,
           total,
           paymentMethod: 'tarjeta',
-          cardName,
-          cardNumber,
-          cardExpiry,
-          cardCvv
+          cardNumber: maskCardNumber(cardDigits)
         },
         { transaction: t }
       );
 
       const orderItems = normalizedItems.map((item) => {
         const product = productsById.get(item.productId);
+
+        const currentStock = Number(product.stock) || 0;
+        if (currentStock < item.quantity) {
+          const error = new Error(`Stock insuficiente para: ${product.nombre}`);
+          error.statusCode = 400;
+          throw error;
+        }
+
+        product.stock = currentStock - item.quantity;
+
         return {
           OrderId: createdOrder.id,
           ProductId: product.id,
@@ -95,14 +111,27 @@ exports.checkout = async (req, res) => {
 
       await OrderItem.bulkCreate(orderItems, { transaction: t });
 
+      // Guardar stock actualizado
+      for (const product of productsById.values()) {
+        if (product.changed('stock')) {
+          await product.save({ transaction: t });
+        }
+      }
+
       return createdOrder;
     });
 
     return res.status(201).json({
-      message: 'Compra registrada',
+      message: 'Gracias por comprar',
       orderId: order.id
     });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        error: error.message
+      });
+    }
+
     return res.status(500).json({
       error: 'No se pudo procesar la compra'
     });

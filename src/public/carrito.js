@@ -4,10 +4,7 @@ const clearCartButton = document.getElementById('clear-cart');
 const paymentForm = document.getElementById('payment-form');
 const checkoutButton = document.getElementById('checkout-btn');
 
-const cardNameInput = document.getElementById('cardName');
 const cardNumberInput = document.getElementById('cardNumber');
-const cardExpiryInput = document.getElementById('cardExpiry');
-const cardCvvInput = document.getElementById('cardCvv');
 
 function getCart() {
   try {
@@ -36,12 +33,23 @@ function calcularTotal(cart) {
   }, 0);
 }
 
+function getDigitsFromCardInput(value) {
+  return String(value || '').replace(/\D/g, '').slice(0, 16);
+}
+
+function formatCardNumber(value) {
+  const digits = getDigitsFromCardInput(value);
+  const parts = digits.match(/.{1,4}/g) || [];
+  return parts.join('-');
+}
+
 function renderCart() {
   const cart = getCart();
 
   if (!cart.length) {
     cartItemsContainer.textContent = 'Tu carrito está vacío.';
     cartTotal.textContent = formatMoney(0);
+    validarPago();
     return;
   }
 
@@ -56,16 +64,14 @@ function renderCart() {
 
   cartItemsContainer.innerHTML = itemsHtml;
   cartTotal.textContent = formatMoney(calcularTotal(cart));
+  validarPago();
 }
 
 function validarPago() {
-  const cardName = cardNameInput.value.trim();
-  const cardNumber = cardNumberInput.value.trim();
-  const cardExpiry = cardExpiryInput.value.trim();
-  const cardCvv = cardCvvInput.value.trim();
-
-  const completo = Boolean(cardName && cardNumber && cardExpiry && cardCvv);
-  checkoutButton.hidden = !completo;
+  const cart = getCart();
+  const digits = getDigitsFromCardInput(cardNumberInput.value);
+  const completo = Boolean(cart.length && digits.length === 16);
+  checkoutButton.disabled = !completo;
 }
 
 cartItemsContainer.addEventListener('click', (event) => {
@@ -83,8 +89,9 @@ clearCartButton.addEventListener('click', () => {
   renderCart();
 });
 
-[cardNameInput, cardNumberInput, cardExpiryInput, cardCvvInput].forEach((input) => {
-  input.addEventListener('input', validarPago);
+cardNumberInput.addEventListener('input', () => {
+  cardNumberInput.value = formatCardNumber(cardNumberInput.value);
+  validarPago();
 });
 
 paymentForm.addEventListener('submit', async (event) => {
@@ -103,6 +110,12 @@ paymentForm.addEventListener('submit', async (event) => {
     return;
   }
 
+  const cardDigits = getDigitsFromCardInput(cardNumberInput.value);
+  if (cardDigits.length !== 16) {
+    alert('El número de tarjeta debe tener 16 dígitos.');
+    return;
+  }
+
   const payload = {
     items: cart.map((item) => ({
       productId: item.productId,
@@ -110,10 +123,7 @@ paymentForm.addEventListener('submit', async (event) => {
     })),
     payment: {
       method: 'tarjeta',
-      cardName: cardNameInput.value.trim(),
-      cardNumber: cardNumberInput.value.trim(),
-      cardExpiry: cardExpiryInput.value.trim(),
-      cardCvv: cardCvvInput.value.trim()
+      cardNumber: cardDigits
     }
   };
 
@@ -136,9 +146,8 @@ paymentForm.addEventListener('submit', async (event) => {
 
     saveCart([]);
     renderCart();
-    validarPago();
 
-    alert(result.message || 'Compra registrada');
+    alert(result.message || 'Gracias por comprar');
   } catch (error) {
     alert('Error al procesar la compra');
   }
