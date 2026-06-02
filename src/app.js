@@ -18,10 +18,8 @@ app.use(cors());
 app.use(express.json());
 app.use(limiter);
 
-// Static (solo en local). En producción el frontend irá por Vercel.
-if (process.env.NODE_ENV !== 'production') {
-  app.use(express.static('src/public'));
-}
+// Static (Render también puede servir el frontend)
+app.use(express.static('src/public'));
 
 // Rutas API
 app.use('/api/users', userRoutes);
