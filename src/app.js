@@ -40,7 +40,7 @@ const corsOptions = {
 };
 
 // Middlewares base (antes de las rutas)
-app.use(cors());
+
 app.use(cors(corsOptions));
 app.use(limiter);
 
