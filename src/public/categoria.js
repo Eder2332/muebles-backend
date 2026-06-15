@@ -3,11 +3,16 @@ const categoryDescription = document.getElementById('category-description');
 const categoryProducts = document.getElementById('category-products');
 const categoriesSection = document.getElementById('categories-section');
 const categoriesList = document.getElementById('categories-list');
-const toggleCategoriesButton = document.getElementById('toggle-categories');
 
 let productosPorId = new Map();
 let productosOriginales = [];
 let categoriasCargadas = false;
+
+function capitalizarCategoria(nombre) {
+  const texto = String(nombre || '').trim();
+  if (!texto) return '';
+  return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+}
 
 function getImageSrc(imagen) {
   const raw = typeof imagen === 'string' ? imagen.trim() : '';
@@ -40,12 +45,10 @@ function renderCategorias(categorias) {
   const qParam = query ? `&q=${encodeURIComponent(query)}` : '';
 
   const items = categorias.map((categoria) => `
-    <li>
-      <a href="/categoria.html?id=${categoria.id}${qParam}">${categoria.nombre}</a>
-    </li>
+    <a class="category-pill" href="/categoria.html?id=${categoria.id}${qParam}">${capitalizarCategoria(categoria.nombre)}</a>
   `).join('');
 
-  categoriesList.innerHTML = `<ul>${items}</ul>`;
+  categoriesList.innerHTML = `<div class="category-pills">${items}</div>`;
 }
 
 async function cargarCategorias() {
@@ -202,8 +205,8 @@ async function cargarCategoria() {
     }
 
     const category = await response.json();
-    categoryName.textContent = category.nombre;
-    categoryDescription.textContent = `Productos registrados en la categoria ${category.nombre}.`;
+    categoryName.textContent = String(category.nombre || '').toUpperCase();
+    categoryDescription.textContent = '';
     productosOriginales = Array.isArray(category.Products) ? category.Products : [];
     aplicarBusqueda(getQueryFromUrl());
   } catch (error) {
@@ -217,16 +220,6 @@ window.addEventListener('productSearch', (event) => {
   aplicarBusqueda(event.detail?.query || '');
 });
 
-if (toggleCategoriesButton && categoriesSection) {
-  toggleCategoriesButton.addEventListener('click', async () => {
-    const seMostrara = categoriesSection.hidden;
-    categoriesSection.hidden = !seMostrara;
-    toggleCategoriesButton.textContent = seMostrara ? 'Ocultar categorias' : 'Ver categorias';
-
-    if (seMostrara && !categoriasCargadas) {
-      await cargarCategorias();
-    }
-  });
-}
-
+// Cargar categorías automáticamente (sin botón)
+cargarCategorias();
 cargarCategoria();

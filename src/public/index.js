@@ -1,11 +1,15 @@
 const categoriesSection = document.getElementById('categories-section');
 const categoriesList = document.getElementById('categories-list');
 const productsList = document.getElementById('products-list');
-const toggleCategoriesButton = document.getElementById('toggle-categories');
-
 let categoriasCargadas = false;
 let productosPorId = new Map();
 let productosOriginales = [];
+
+function capitalizarCategoria(nombre) {
+  const texto = String(nombre || '').trim();
+  if (!texto) return '';
+  return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+}
 
 function getImageSrc(imagen) {
   const raw = typeof imagen === 'string' ? imagen.trim() : '';
@@ -91,12 +95,10 @@ function renderCategorias(categorias) {
   }
 
   const items = categorias.map((categoria) => `
-    <li>
-      <a href="/categoria.html?id=${categoria.id}">${categoria.nombre}</a>
-    </li>
+    <a class="category-pill" href="/categoria.html?id=${categoria.id}">${capitalizarCategoria(categoria.nombre)}</a>
   `).join('');
 
-  categoriesList.innerHTML = `<ul>${items}</ul>`;
+  categoriesList.innerHTML = `<div class="category-pills">${items}</div>`;
 }
 
 function renderProductos(productos) {
@@ -195,15 +197,8 @@ async function cargarProductos() {
   }
 }
 
-toggleCategoriesButton.addEventListener('click', async () => {
-  const seMostrara = categoriesSection.hidden;
-  categoriesSection.hidden = !seMostrara;
-  toggleCategoriesButton.textContent = seMostrara ? 'Ocultar categorias' : 'Ver categorias';
-
-  if (seMostrara && !categoriasCargadas) {
-    await cargarCategorias();
-  }
-});
+// Cargar categorías automáticamente (sin botón)
+cargarCategorias();
 
 window.addEventListener('productSearch', (event) => {
   aplicarBusqueda(event.detail?.query || '');

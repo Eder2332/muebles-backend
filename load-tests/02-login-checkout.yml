@@ -1,0 +1,49 @@
+config:
+  target: "https://muebles-backend-73jr.onrender.com"
+  phases:
+    # Prueba de compra (no la hagas masiva, porque baja stock).
+    - duration: 60
+      arrivalRate: 1
+
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+
+  variables:
+    # PON AQUÍ un usuario que ya exista (no es register).
+    email: "ana@gmail.com"
+    password: "123eder"
+
+scenarios:
+  - name: "Login + checkout (actualiza stock)"
+    flow:
+      # 1) Obtener un productId real del listado (paginado)
+      - get:
+          url: "/api/products?page=1&limit=10"
+          capture:
+            - json: "$.data[0].id"
+              as: "productId"
+
+      # 2) Login para obtener token
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "{{ email }}"
+            password: "{{ password }}"
+          capture:
+            - json: "$.token"
+              as: "token"
+
+      # 3) Checkout (requiere token)
+      - post:
+          url: "/api/orders/checkout"
+          headers:
+            Authorization: "Bearer {{ token }}"
+          json:
+            items:
+              - productId: "{{ productId }}"
+                quantity: 1
+            payment:
+              method: "tarjeta"
+              cardNumber: "4111111111111111"

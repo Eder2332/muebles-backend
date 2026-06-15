@@ -21,12 +21,37 @@ async function loadNavbar() {
 
   const nombre = localStorage.getItem("nombre");
   const token = localStorage.getItem("token");
+  const adminToken = localStorage.getItem("adminToken");
   const userName = document.getElementById("userName");
+  const loginLink = document.getElementById('loginLink');
+  const registerLink = document.getElementById('registerLink');
+  const personalLink = document.getElementById('personalLink');
+  const logoutLink = document.getElementById('logoutLink');
+
+  const estaLogeado = Boolean(token || adminToken);
 
   if (token && nombre) {
     userName.textContent = "👤 " + nombre;
+  } else if (adminToken) {
+    userName.textContent = "👤 Administrador";
   } else {
     userName.textContent = "No logeado";
+  }
+
+  // Mostrar/ocultar links según sesión
+  if (loginLink) loginLink.style.display = estaLogeado ? 'none' : '';
+  if (registerLink) registerLink.style.display = estaLogeado ? 'none' : '';
+  if (personalLink) personalLink.style.display = estaLogeado ? 'none' : '';
+  if (logoutLink) logoutLink.style.display = estaLogeado ? '' : 'none';
+
+  if (logoutLink) {
+    logoutLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('nombre');
+      window.location.href = '/';
+    });
   }
 
   const searchInput = document.querySelector('.navbar-search');

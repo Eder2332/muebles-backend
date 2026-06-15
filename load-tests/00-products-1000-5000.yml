@@ -1,0 +1,24 @@
+config:
+  # Cambia el target según dónde pruebes:
+  # - Local: http://localhost:3000
+  # - Render: https://muebles-backend-73jr.onrender.com
+  target: "https://muebles-backend-73jr.onrender.com"
+
+  phases:
+    # Ajusta arrivalRate y duration para lograr ~1000-5000 requests.
+    # Total aprox = arrivalRate * duration (porque el flow hace 1 request).
+    # Ejemplos:
+    # - 1000 requests: arrivalRate 20, duration 50
+    # - 5000 requests: arrivalRate 50, duration 100
+    - duration: 5000
+      arrivalRate: 100
+
+  defaults:
+    headers:
+      Accept: "application/json"
+
+scenarios:
+  - name: "GET products (paginado)"
+    flow:
+      - get:
+          url: "/api/products?page=1&limit=10"

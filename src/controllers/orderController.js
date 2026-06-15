@@ -2,6 +2,9 @@ const sequelize = require('../config/database');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 const OrderItem = require('../models/OrderItem');
+const User = require('../models/User');
+const { sendEmail } = require('../utils/mailer');
+const { buildOrderReceiptEmail } = require('../utils/emailTemplates');
 
 function maskCardNumber(cardDigits) {
   const digits = String(cardDigits || '').replace(/\D/g, '');
@@ -55,6 +58,9 @@ exports.checkout = async (req, res) => {
 
   try {
     const productIds = [...new Set(normalizedItems.map((i) => i.productId))];
+    let receiptItems = [];
+    let receiptTotal = 0;
+
     const order = await sequelize.transaction(async (t) => {
       // Cargar y bloquear productos para actualizar stock en forma segura
       const products = await Product.findAll({
@@ -79,6 +85,8 @@ exports.checkout = async (req, res) => {
         return acc + price * item.quantity;
       }, 0);
 
+      receiptTotal = total;
+
       const createdOrder = await Order.create(
         {
           UserId: req.user.id,
@@ -101,6 +109,13 @@ exports.checkout = async (req, res) => {
 
         product.stock = currentStock - item.quantity;
 
+        receiptItems.push({
+          nombre: product.nombre,
+          quantity: item.quantity,
+          price: Number(product.precio) || 0,
+          subtotal: (Number(product.precio) || 0) * item.quantity
+        });
+
         return {
           OrderId: createdOrder.id,
           ProductId: product.id,
@@ -120,6 +135,30 @@ exports.checkout = async (req, res) => {
 
       return createdOrder;
     });
+
+    // Enviar correo (no bloquea la compra si falla)
+    try {
+      const user = await User.findByPk(req.user.id);
+      const to = user?.email;
+
+      if (to) {
+        const { html, text } = buildOrderReceiptEmail({
+          orderId: order.id,
+          items: receiptItems,
+          total: receiptTotal
+        });
+
+        await sendEmail({
+          to,
+          subject: `UrbanMuebles: Confirmación de compra #${order.id}`,
+          html,
+          text
+        });
+      }
+    } catch (emailError) {
+      // Solo log, la compra ya fue registrada
+      console.log('No se pudo enviar el correo de compra:', emailError?.message || emailError);
+    }
 
     return res.status(201).json({
       message: 'Gracias por comprar',

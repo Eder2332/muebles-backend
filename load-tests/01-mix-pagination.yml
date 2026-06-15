@@ -1,0 +1,20 @@
+config:
+  target: "https://muebles-backend-73jr.onrender.com"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+
+  defaults:
+    headers:
+      Accept: "application/json"
+
+scenarios:
+  - name: "Mix paginado: products + categories"
+    flow:
+      - get:
+          url: "/api/products?page=1&limit=10"
+      - get:
+          url: "/api/categories?page=1&limit=10"
+      # Cambia el :id por una categoría real que exista en tu BD
+      - get:
+          url: "/api/categories/1"

@@ -2,8 +2,6 @@ const express = require('express');
 
 const cors = require('cors');
 
-const limiter = require('./middlewares/rateLimit');
-
 const authRoutes = require('./routes/authRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
@@ -42,7 +40,7 @@ const corsOptions = {
 // Middlewares base (antes de las rutas)
 
 app.use(cors(corsOptions));
-app.use(limiter);
+app.use(express.json());
 
 // Static (Render también puede servir el frontend)
 app.use(express.static('src/public'));

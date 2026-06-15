@@ -62,26 +62,41 @@ body {
 
 .catalog-categories {
   margin-top: 16px;
-  padding: 18px 20px;
+  padding: 18px 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: var(--shadow);
 }
 
-.catalog-categories ul {
-  margin-top: 12px;
-  padding-left: 18px;
+.category-pills {
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px auto 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.catalog-categories a {
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  min-width: 120px;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 107, 77, 0.25);
+  background: rgba(139, 107, 77, 0.08);
   color: var(--brand);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  transition: 0.2s;
 }
 
-.catalog-categories a:hover {
-  text-decoration: underline;
+.category-pill:hover {
+  background: rgba(139, 107, 77, 0.14);
+  transform: translateY(-1px);
 }
 
 .catalog-products-section {

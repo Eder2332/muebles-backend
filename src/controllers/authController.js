@@ -3,6 +3,17 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+function normalizarEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function esGmailValido(email) {
+  const correo = normalizarEmail(email);
+  // Acepta cualquier correo con dominio @gmail.com (no valida si realmente existe)
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  return regexEmail.test(correo);
+}
+
 
 //Registro de usuarios
 exports.register = async (req, res) => {
@@ -38,12 +49,9 @@ exports.register = async (req, res) => {
 
 
     // 🔥 VALIDACIÓN MEJORADA DEL CORREO
-    const emailLimpio = email.trim().toLowerCase();
+    const emailLimpio = normalizarEmail(email);
 
-    const regexEmail =
-      /^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|outlook\.com)$/;
-
-    if (!regexEmail.test(emailLimpio)) {
+    if (!esGmailValido(emailLimpio)) {
       return res.status(400).json({
         error: 'Correo electrónico inválido'
       });
@@ -95,8 +103,10 @@ exports.login = async (req, res) => {
       });
     }
 
+    const emailLimpio = normalizarEmail(email);
+
     const user = await User.findOne({
-      where: { email }
+      where: { email: emailLimpio }
     });
 
     if (!user) {
@@ -144,8 +154,10 @@ exports.personalLogin = async (req, res) => {
 
         const { email, password } = req.body;
 
+        const emailLimpio = normalizarEmail(email);
+
         const user = await User.findOne({
-            where: { email }
+            where: { email: emailLimpio }
         });
 
         if (!user) {
@@ -202,4 +214,3 @@ exports.personalLogin = async (req, res) => {
     }
 
 };
-
