@@ -141,6 +141,8 @@ exports.checkout = async (req, res) => {
       const user = await User.findByPk(req.user.id);
       const to = user?.email;
 
+      console.log(`[CHECKOUT] Orden #${order.id} registrada para el usuario ${req.user.id}. Email destino: ${to || 'sin email'}`);
+
       if (to) {
         const { html, text } = buildOrderReceiptEmail({
           orderId: order.id,
@@ -148,12 +150,16 @@ exports.checkout = async (req, res) => {
           total: receiptTotal
         });
 
-        await sendEmail({
+        const emailResult = await sendEmail({
           to,
           subject: `UrbanMuebles: Confirmación de compra #${order.id}`,
           html,
           text
         });
+
+        console.log('[CHECKOUT] Resultado del envío de correo:', emailResult);
+      } else {
+        console.log('[CHECKOUT] No se intentó enviar correo porque el usuario no tiene email');
       }
     } catch (emailError) {
       // Solo log, la compra ya fue registrada

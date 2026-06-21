@@ -44,12 +44,19 @@ async function createTransporter() {
 }
 
 async function sendEmail({ to, subject, html, text }) {
-  if (!isEmailEnabled()) return { skipped: true };
+  if (!isEmailEnabled()) {
+    console.log('[EMAIL] Envío omitido: EMAIL_ENABLED no está en true');
+    return { skipped: true, reason: 'EMAIL_DISABLED' };
+  }
 
   const fromName = getEnv('EMAIL_FROM_NAME') || 'UrbanMuebles';
   const gmailUser = getEnv('GMAIL_SENDER');
 
+  console.log(`[EMAIL] Preparando envío. From: ${gmailUser} -> To: ${to}`);
+
   const transporter = await createTransporter();
+  await transporter.verify();
+  console.log('[EMAIL] Transporter verificado correctamente');
 
   const info = await transporter.sendMail({
     from: `"${fromName}" <${gmailUser}>`,
@@ -59,6 +66,7 @@ async function sendEmail({ to, subject, html, text }) {
     text
   });
 
+  console.log(`[EMAIL] Correo enviado correctamente. MessageId: ${info.messageId}`);
   return { skipped: false, messageId: info.messageId };
 }
 
@@ -66,4 +74,3 @@ module.exports = {
   sendEmail,
   isEmailEnabled
 };
-
