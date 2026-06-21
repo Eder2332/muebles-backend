@@ -32,6 +32,9 @@ async function createTransporter() {
 
   return nodemailer.createTransport({
     service: 'gmail',
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
     auth: {
       type: 'OAuth2',
       user: gmailUser,
@@ -55,8 +58,6 @@ async function sendEmail({ to, subject, html, text }) {
   console.log(`[EMAIL] Preparando envío. From: ${gmailUser} -> To: ${to}`);
 
   const transporter = await createTransporter();
-  await transporter.verify();
-  console.log('[EMAIL] Transporter verificado correctamente');
 
   const info = await transporter.sendMail({
     from: `"${fromName}" <${gmailUser}>`,

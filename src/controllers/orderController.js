@@ -136,14 +136,19 @@ exports.checkout = async (req, res) => {
       return createdOrder;
     });
 
-    // Enviar correo (no bloquea la compra si falla)
-    try {
-      const user = await User.findByPk(req.user.id);
-      const to = user?.email;
+    // Disparar correo en segundo plano para no bloquear la respuesta del checkout
+    (async () => {
+      try {
+        const user = await User.findByPk(req.user.id);
+        const to = user?.email;
 
-      console.log(`[CHECKOUT] Orden #${order.id} registrada para el usuario ${req.user.id}. Email destino: ${to || 'sin email'}`);
+        console.log(`[CHECKOUT] Orden #${order.id} registrada para el usuario ${req.user.id}. Email destino: ${to || 'sin email'}`);
 
-      if (to) {
+        if (!to) {
+          console.log('[CHECKOUT] No se intentó enviar correo porque el usuario no tiene email');
+          return;
+        }
+
         const { html, text } = buildOrderReceiptEmail({
           orderId: order.id,
           items: receiptItems,
@@ -158,13 +163,10 @@ exports.checkout = async (req, res) => {
         });
 
         console.log('[CHECKOUT] Resultado del envío de correo:', emailResult);
-      } else {
-        console.log('[CHECKOUT] No se intentó enviar correo porque el usuario no tiene email');
+      } catch (emailError) {
+        console.log('No se pudo enviar el correo de compra:', emailError?.message || emailError);
       }
-    } catch (emailError) {
-      // Solo log, la compra ya fue registrada
-      console.log('No se pudo enviar el correo de compra:', emailError?.message || emailError);
-    }
+    })();
 
     return res.status(201).json({
       message: 'Gracias por comprar',
