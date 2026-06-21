@@ -1,4 +1,3 @@
-const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
 function getEnv(name) {
@@ -30,20 +29,42 @@ async function createTransporter() {
     throw new Error('EMAIL_ACCESS_TOKEN_FAILED');
   }
 
-  return nodemailer.createTransport({
-    service: 'gmail',
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 20000,
-    auth: {
-      type: 'OAuth2',
-      user: gmailUser,
-      clientId,
-      clientSecret,
-      refreshToken,
-      accessToken
-    }
+  oauth2Client.setCredentials({
+    refresh_token: refreshToken,
+    access_token: accessToken
   });
+
+  const gmail = google.gmail({
+    version: 'v1',
+    auth: oauth2Client
+  });
+
+  return {
+    gmail,
+    gmailUser
+  };
+}
+
+function toBase64Url(str) {
+  return Buffer.from(str)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+}
+
+function buildRawMessage({ from, to, subject, html, text }) {
+  const lines = [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/html; charset=UTF-8',
+    '',
+    html || text || ''
+  ];
+
+  return toBase64Url(lines.join('\r\n'));
 }
 
 async function sendEmail({ to, subject, html, text }) {
@@ -57,18 +78,25 @@ async function sendEmail({ to, subject, html, text }) {
 
   console.log(`[EMAIL] Preparando envío. From: ${gmailUser} -> To: ${to}`);
 
-  const transporter = await createTransporter();
-
-  const info = await transporter.sendMail({
-    from: `"${fromName}" <${gmailUser}>`,
+  const { gmail } = await createTransporter();
+  const fromHeader = `"${fromName}" <${gmailUser}>`;
+  const raw = buildRawMessage({
+    from: fromHeader,
     to,
     subject,
     html,
     text
   });
 
-  console.log(`[EMAIL] Correo enviado correctamente. MessageId: ${info.messageId}`);
-  return { skipped: false, messageId: info.messageId };
+  const response = await gmail.users.messages.send({
+    userId: 'me',
+    requestBody: {
+      raw
+    }
+  });
+
+  console.log(`[EMAIL] Correo enviado correctamente. MessageId: ${response.data.id}`);
+  return { skipped: false, messageId: response.data.id };
 }
 
 module.exports = {
