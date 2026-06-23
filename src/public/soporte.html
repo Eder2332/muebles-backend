@@ -46,8 +46,11 @@
         <textarea id="messageInput" rows="6" placeholder="Cuéntanos qué ocurrió, cuándo pasó y cómo podemos ayudarte." style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8; resize: vertical;"></textarea>
       </div>
 
-      <button id="sendBtn" type="button" class="checkout-btn" style="margin-top: 16px;">Enviar</button>
-      <p id="supportStatus" style="margin-top: 10px; color: var(--muted); line-height: 1.7;">
+      <button id="sendBtn" type="button" class="checkout-btn" style="margin-top: 16px;">
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span class="btn-label">Enviar</span>
+      </button>
+      <p id="supportStatus" class="support-status" style="margin-top: 10px; line-height: 1.7;">
         Debes iniciar sesión para enviar un reporte. El sistema usará el correo de tu cuenta.
       </p>
     </section>
