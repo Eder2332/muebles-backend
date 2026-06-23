@@ -1,19 +1,25 @@
 const { sendEmail, isEmailEnabled } = require('../utils/mailer');
 const { buildSupportReportEmail } = require('../utils/emailTemplates');
+const User = require('../models/User');
 
 function normalizeText(value) {
   return String(value || '').trim();
 }
 
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+function isValidName(name) {
+  return /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(name);
 }
 
 exports.sendSupportReport = async (req, res) => {
   const name = normalizeText(req.body?.name);
-  const email = normalizeText(req.body?.email).toLowerCase();
   const issueType = normalizeText(req.body?.issueType);
   const message = normalizeText(req.body?.message);
+
+  if (!req.user?.id) {
+    return res.status(401).json({
+      error: 'Debes iniciar sesión'
+    });
+  }
 
   if (!name || name.length < 2) {
     return res.status(400).json({
@@ -21,9 +27,9 @@ exports.sendSupportReport = async (req, res) => {
     });
   }
 
-  if (!isValidEmail(email)) {
+  if (!isValidName(name)) {
     return res.status(400).json({
-      error: 'Ingresa un correo válido'
+      error: 'El nombre solo puede contener letras y espacios'
     });
   }
 
@@ -46,14 +52,24 @@ exports.sendSupportReport = async (req, res) => {
   }
 
   const supportEmail = process.env.SUPPORT_TO_EMAIL?.trim() || 'vilcayucrae@gmail.com';
-  const { html, text } = buildSupportReportEmail({
-    name,
-    email,
-    issueType,
-    message
-  });
 
   try {
+    const user = await User.findByPk(req.user.id);
+
+    if (!user?.email) {
+      return res.status(400).json({
+        error: 'Tu cuenta no tiene un correo válido registrado'
+      });
+    }
+
+    const email = normalizeText(user.email).toLowerCase();
+    const { html, text } = buildSupportReportEmail({
+      name,
+      email,
+      issueType,
+      message
+    });
+
     await sendEmail({
       to: supportEmail,
       subject: `UrbanMuebles: nuevo reporte de soporte - ${issueType}`,

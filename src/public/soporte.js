@@ -1,11 +1,16 @@
 const nameInput = document.getElementById('nameInput');
-const emailInput = document.getElementById('emailInput');
 const issueSelect = document.getElementById('issueSelect');
 const otherBox = document.getElementById('otherBox');
 const otherIssueInput = document.getElementById('otherIssueInput');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
 const supportStatus = document.getElementById('supportStatus');
+const token = localStorage.getItem('token');
+
+if (!token) {
+  alert('Debes iniciar sesión para acceder a soporte.');
+  window.location.href = '/login.html';
+}
 
 function toggleOtherBox() {
   const value = (issueSelect.value || '').trim();
@@ -28,10 +33,17 @@ function getIssueType() {
   return selected;
 }
 
+function isValidName(name) {
+  return /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(name);
+}
+
+function sanitizeName(value) {
+  return String(value || '').replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');
+}
+
 async function sendSupportReport() {
   const payload = {
     name: nameInput.value.trim(),
-    email: emailInput.value.trim(),
     issueType: getIssueType(),
     message: messageInput.value.trim()
   };
@@ -42,9 +54,9 @@ async function sendSupportReport() {
     return;
   }
 
-  if (!payload.email) {
-    setStatus('Ingresa tu correo.', '#b34747');
-    emailInput.focus();
+  if (!isValidName(payload.name)) {
+    setStatus('El nombre solo puede contener letras y espacios.', '#b34747');
+    nameInput.focus();
     return;
   }
 
@@ -73,7 +85,8 @@ async function sendSupportReport() {
     const response = await fetch('/api/support/report', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(payload)
     });
@@ -81,6 +94,15 @@ async function sendSupportReport() {
     const result = await response.json().catch(() => ({}));
 
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        setStatus('Tu sesión expiró. Vuelve a iniciar sesión.', '#b34747');
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 1200);
+        return;
+      }
+
       setStatus(result.error || 'No se pudo enviar tu reporte.', '#b34747');
       return;
     }
@@ -96,6 +118,13 @@ async function sendSupportReport() {
     toggleOtherBox();
   }
 }
+
+nameInput.addEventListener('input', () => {
+  const cleanValue = sanitizeName(nameInput.value);
+  if (nameInput.value !== cleanValue) {
+    nameInput.value = cleanValue;
+  }
+});
 
 issueSelect.addEventListener('change', toggleOtherBox);
 sendBtn.addEventListener('click', sendSupportReport);
