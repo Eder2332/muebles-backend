@@ -53,21 +53,28 @@ function toBase64Url(str) {
     .replace(/=+$/g, '');
 }
 
-function buildRawMessage({ from, to, subject, html, text }) {
+function buildRawMessage({ from, to, subject, html, text, replyTo }) {
   const lines = [
     `From: ${from}`,
     `To: ${to}`,
-    `Subject: ${subject}`,
+    `Subject: ${subject}`
+  ];
+
+  if (replyTo) {
+    lines.push(`Reply-To: ${replyTo}`);
+  }
+
+  lines.push(
     'MIME-Version: 1.0',
     'Content-Type: text/html; charset=UTF-8',
     '',
     html || text || ''
-  ];
+  );
 
   return toBase64Url(lines.join('\r\n'));
 }
 
-async function sendEmail({ to, subject, html, text }) {
+async function sendEmail({ to, subject, html, text, replyTo }) {
   if (!isEmailEnabled()) {
     console.log('[EMAIL] Envío omitido: EMAIL_ENABLED no está en true');
     return { skipped: true, reason: 'EMAIL_DISABLED' };
@@ -85,7 +92,8 @@ async function sendEmail({ to, subject, html, text }) {
     to,
     subject,
     html,
-    text
+    text,
+    replyTo
   });
 
   const response = await gmail.users.messages.send({

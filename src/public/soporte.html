@@ -15,10 +15,24 @@
 
     <section class="page-section">
       <h2>Cuéntanos tu problema</h2>
+      <p style="margin-top: 8px; color: var(--muted); line-height: 1.7;">
+        Envíanos tu incidencia y la revisaremos en el menor tiempo posible.
+      </p>
+
+      <div style="margin-top: 14px;">
+        <label for="nameInput" style="font-weight: 700; color: var(--title);">Tu nombre</label>
+        <input id="nameInput" type="text" placeholder="Ejemplo: Ederson Vilca" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8;">
+      </div>
+
+      <div style="margin-top: 14px;">
+        <label for="emailInput" style="font-weight: 700; color: var(--title);">Tu correo</label>
+        <input id="emailInput" type="email" placeholder="Ejemplo: usuario@gmail.com" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8;">
+      </div>
 
       <div style="margin-top: 14px;">
         <label for="issueSelect" style="font-weight: 700; color: var(--title);">Selecciona un problema</label>
         <select id="issueSelect" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8;">
+          <option value="">Selecciona una opción</option>
           <option value="No responde la pagina">No responde la pagina</option>
           <option value="Mi compra no procede">Mi compra no procede</option>
           <option value="Cambiar correo electronico">Cambiar correo electronico</option>
@@ -28,13 +42,18 @@
       </div>
 
       <div id="otherBox" style="margin-top: 14px; display: none;">
-        <label for="otherText" style="font-weight: 700; color: var(--title);">Describe tu problema</label>
-        <textarea id="otherText" rows="5" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8; resize: vertical;"></textarea>
+        <label for="otherIssueInput" style="font-weight: 700; color: var(--title);">Indica el tipo de problema</label>
+        <input id="otherIssueInput" type="text" placeholder="Escribe aquí tu problema" style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8;">
+      </div>
+
+      <div style="margin-top: 14px;">
+        <label for="messageInput" style="font-weight: 700; color: var(--title);">Describe tu problema</label>
+        <textarea id="messageInput" rows="6" placeholder="Cuéntanos qué ocurrió, cuándo pasó y cómo podemos ayudarte." style="margin-top: 10px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #d8c8b9; background: #fcfaf8; resize: vertical;"></textarea>
       </div>
 
       <button id="sendBtn" type="button" class="checkout-btn" style="margin-top: 16px;">Enviar</button>
-      <p style="margin-top: 10px; color: var(--muted); line-height: 1.7;">
-        Nota: Por el momento este botón no envía mensajes. Más adelante se integrará con correos.
+      <p id="supportStatus" style="margin-top: 10px; color: var(--muted); line-height: 1.7;">
+        Completa el formulario para enviar tu reporte de soporte.
       </p>
     </section>
   </main>

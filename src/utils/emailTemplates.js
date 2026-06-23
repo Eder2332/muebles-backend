@@ -53,7 +53,42 @@ function buildOrderReceiptEmail({ orderId, items, total }) {
   return { html, text };
 }
 
-module.exports = {
-  buildOrderReceiptEmail
-};
+function buildSupportReportEmail({ name, email, issueType, message }) {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeIssueType = escapeHtml(issueType);
+  const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
 
+  const html = `
+    <div style="font-family:Segoe UI, Arial, sans-serif; color:#2d3138;">
+      <h2 style="margin:0 0 8px;">Nuevo reporte de soporte</h2>
+      <p style="margin:0 0 14px;">Se registró una nueva solicitud desde la página de soporte.</p>
+      <p style="margin:0 0 8px;"><strong>Nombre:</strong> ${safeName}</p>
+      <p style="margin:0 0 8px;"><strong>Correo:</strong> ${safeEmail}</p>
+      <p style="margin:0 0 14px;"><strong>Tipo de problema:</strong> ${safeIssueType}</p>
+      <div style="padding:14px; border-radius:12px; background:#f8f5f1; border:1px solid #eadfd3;">
+        <p style="margin:0 0 8px;"><strong>Descripción del problema</strong></p>
+        <p style="margin:0; line-height:1.6;">${safeMessage}</p>
+      </div>
+      <p style="margin:18px 0 0; color:#7b6d63;">UrbanMuebles</p>
+    </div>
+  `;
+
+  const text = [
+    'Nuevo reporte de soporte',
+    '',
+    `Nombre: ${name}`,
+    `Correo: ${email}`,
+    `Tipo de problema: ${issueType}`,
+    '',
+    'Descripción del problema:',
+    message
+  ].join('\n');
+
+  return { html, text };
+}
+
+module.exports = {
+  buildOrderReceiptEmail,
+  buildSupportReportEmail
+};
