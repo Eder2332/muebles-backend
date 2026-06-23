@@ -243,6 +243,12 @@ hr {
   transition: 0.25s;
 }
 
+.support-btn {
+  width: auto;
+  min-width: 160px;
+  padding: 12px 18px;
+}
+
 .checkout-btn:hover {
   background: var(--brand-dark);
   transform: translateY(-1px);
